@@ -1,5 +1,5 @@
 
-import React from 'react';
+import React, { useState } from 'react';
 
 const CustomCheckIcon = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
   <svg 
@@ -23,12 +23,28 @@ const CustomCheckIcon = ({ size = 24, className = "" }: { size?: number, classNa
 );
 
 export const About: React.FC = () => {
+  const [portraitSrc, setPortraitSrc] = useState("portrait.jpg");
+  
   const credentials = [
     "Expert in Tax Compliance",
     "Certified Bookkeeping Professional",
     "Strategic Financial Advisory",
     "Payroll Management Specialist"
   ];
+
+  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
+    const target = e.currentTarget;
+    console.warn(`Lucia Advisory: Initial path ${portraitSrc} failed. Trying alternative...`);
+    
+    // Attempt common path resolutions for production environments
+    if (portraitSrc === "portrait.jpg") {
+      setPortraitSrc("./portrait.jpg");
+    } else if (portraitSrc === "./portrait.jpg") {
+      setPortraitSrc("/portrait.jpg");
+    } else {
+      console.error("Lucia Advisory: Portrait image could not be found at root paths. Please ensure portrait.jpg is in the project root.");
+    }
+  };
 
   return (
     <section id="about" className="py-16 px-4 sm:px-6 lg:px-8 bg-darker relative overflow-hidden">
@@ -41,10 +57,11 @@ export const About: React.FC = () => {
             <div className="relative z-10">
               <div className="aspect-[4/5] overflow-hidden rounded-sm shadow-3xl border border-white/5 bg-navy/80 flex items-center justify-center transform transition-all duration-1000 group-hover:scale-[1.01]">
                 <img 
-                  src="portrait.jpg" 
+                  src={portraitSrc} 
                   alt="Lucia Maina Portrait" 
                   className="w-full h-full object-cover transition-opacity duration-1000 opacity-0"
                   onLoad={(e) => (e.currentTarget as HTMLImageElement).style.opacity = '1'}
+                  onError={handleImageError}
                 />
               </div>
               
@@ -55,13 +72,13 @@ export const About: React.FC = () => {
                     <div className="flex-shrink-0 text-gold">
                       <CustomCheckIcon size={18} />
                     </div>
-                    <span className="text-white text-[9px] font-bold uppercase tracking-[0.2em] leading-tight">EXPERT IN KRA TAX COMPLIANCE</span>
+                    <span className="text-white text-[9px] font-bold uppercase tracking-[0.2em] font-sans leading-tight">EXPERT IN KRA TAX COMPLIANCE</span>
                   </div>
                   <div className="flex items-center gap-4">
                     <div className="flex-shrink-0 text-gold">
                       <CustomCheckIcon size={18} />
                     </div>
-                    <span className="text-white text-[9px] font-bold uppercase tracking-[0.2em] leading-tight">CERTIFIED BOOKKEEPING PROFESSIONAL</span>
+                    <span className="text-white text-[9px] font-bold uppercase tracking-[0.2em] font-sans leading-tight">CERTIFIED BOOKKEEPING PROFESSIONAL</span>
                   </div>
                 </div>
               </div>
@@ -76,7 +93,7 @@ export const About: React.FC = () => {
               <div className="w-24 h-1.5 bg-gold rounded-full"></div>
             </div>
 
-            <p className="text-white/70 leading-relaxed text-xl font-light">
+            <p className="text-white/70 leading-relaxed text-xl font-light font-sans">
               Lucia Maina is a dedicated Tax Compliance and Bookkeeping Consultant based in Nairobi. With a deep understanding of the local regulatory landscape, she helps businesses navigate the complexities of tax laws while maintaining crystal-clear financial records.
             </p>
 
@@ -86,7 +103,7 @@ export const About: React.FC = () => {
                   <div className="text-gold transition-all duration-500 group-hover:scale-110">
                     <CustomCheckIcon size={22} />
                   </div>
-                  <span className="text-white font-bold tracking-[0.2em] uppercase text-[10px] group-hover:text-gold transition-colors">
+                  <span className="text-white font-bold tracking-[0.2em] uppercase text-[10px] group-hover:text-gold transition-colors font-sans">
                     {item}
                   </span>
                 </div>
