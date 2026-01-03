@@ -27,8 +27,6 @@ export const About: React.FC = () => {
   
   // Primary source is the local file. We use ../ to go up from components/ to the root.
   const localPortrait = "../portrait.jpg";
-  const fallbackUrl = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800";
-
   const credentials = [
     "Expert in Tax Compliance",
     "Certified Bookkeeping Professional",
