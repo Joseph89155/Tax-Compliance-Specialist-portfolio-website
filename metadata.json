@@ -1,0 +1,8 @@
+{
+  "name": "Lucia Maina - Tax Consultant Professional Website",
+  "description": "A high-end, professional consultant website for Lucia Maina, featuring tax compliance and bookkeeping services with a sophisticated gold and navy blue aesthetic derived from her business card.",
+  "requestFramePermissions": [
+    "camera",
+    "microphone"
+  ]
+}
