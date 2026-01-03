@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React from 'react';
 
 const CustomCheckIcon = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
   <svg 
@@ -23,10 +23,6 @@ const CustomCheckIcon = ({ size = 24, className = "" }: { size?: number, classNa
 );
 
 export const About: React.FC = () => {
-  const [useFallback, setUseFallback] = useState(false);
-  
-  // Primary source is the local file. We use ../ to go up from components/ to the root.
-  const localPortrait = "../portrait.jpg";
   const credentials = [
     "Expert in Tax Compliance",
     "Certified Bookkeeping Professional",
@@ -45,16 +41,10 @@ export const About: React.FC = () => {
             <div className="relative z-10">
               <div className="aspect-[4/5] overflow-hidden rounded-sm shadow-3xl border border-white/5 bg-navy/80 flex items-center justify-center transform transition-all duration-1000 group-hover:scale-[1.01]">
                 <img 
-                  src={useFallback ? fallbackUrl : localPortrait} 
+                  src="portrait.jpg" 
                   alt="Lucia Maina Portrait" 
                   className="w-full h-full object-cover transition-opacity duration-1000 opacity-0"
                   onLoad={(e) => (e.currentTarget as HTMLImageElement).style.opacity = '1'}
-                  onError={() => {
-                    if (!useFallback) {
-                      console.warn("Local portrait.jpg failed to load, switching to professional placeholder.");
-                      setUseFallback(true);
-                    }
-                  }}
                 />
               </div>
               
