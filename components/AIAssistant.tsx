@@ -1,11 +1,13 @@
+
 import React, { useState } from 'react';
-import { Send, Bot, Loader2 } from 'lucide-react';
+import { Send, Bot, Loader2, AlertCircle } from 'lucide-react';
 import { getTaxAdvice } from '../services/geminiService';
 
 export const AIAssistant: React.FC = () => {
   const [query, setQuery] = useState('');
   const [answer, setAnswer] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
+  const [configError, setConfigError] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -13,8 +15,17 @@ export const AIAssistant: React.FC = () => {
     
     setLoading(true);
     setAnswer(null);
+    setConfigError(false);
+    
     const result = await getTaxAdvice(query);
-    setAnswer(result || "Error processing request.");
+    
+    if (result === "CONFIGURATION_REQUIRED") {
+      setConfigError(true);
+      setAnswer(null);
+    } else {
+      setAnswer(result || "Error processing request.");
+    }
+    
     setLoading(false);
   };
 
@@ -51,6 +62,18 @@ export const AIAssistant: React.FC = () => {
                 </button>
               </div>
             </form>
+
+            {configError && (
+              <div className="mt-8 p-8 bg-red-900/20 rounded-3xl border border-red-500/30 animate-fade-in flex items-start gap-4">
+                <AlertCircle className="text-red-500 mt-1 flex-shrink-0" size={24} />
+                <div className="space-y-2">
+                  <h4 className="text-white font-bold serif text-lg">AI Assistant Offline</h4>
+                  <p className="text-white/70 text-sm leading-relaxed">
+                    The API Key hasn't been recognized yet. If you just added it to Vercel, please <strong>Redeploy</strong> your project from the Vercel dashboard to apply the changes.
+                  </p>
+                </div>
+              </div>
+            )}
 
             {answer && (
               <div className="mt-8 p-10 bg-darker/60 rounded-3xl border border-gold/20 animate-fade-in shadow-2xl">
