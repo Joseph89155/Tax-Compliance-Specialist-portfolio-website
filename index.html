@@ -27,7 +27,6 @@
     <meta property="twitter:description" content="Empowering businesses with strategic financial clarity and KRA compliance expertise in Kenya.">
     <meta property="twitter:image" content="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=1200">
 
-    <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
     {
       "@context": "https://schema.org",
@@ -52,6 +51,7 @@
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Montserrat:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="index.css">
     <script>
       tailwind.config = {
         darkMode: 'class',
@@ -102,7 +102,6 @@
         }
       }
 
-      /* Viewport Transitions */
       .page-transition-enter {
         opacity: 0;
         transform: scale(0.98) translateY(20px);
@@ -113,12 +112,10 @@
         transition: opacity 600ms ease-out, transform 600ms cubic-bezier(0.34, 1.56, 0.64, 1);
       }
 
-      /* Smooth scrolling */
       html {
         scroll-behavior: smooth;
       }
 
-      /* Custom Scrollbar */
       ::-webkit-scrollbar {
         width: 8px;
       }
@@ -141,10 +138,9 @@
       }
     }
     </script>
-  <link rel="stylesheet" href="/index.css">
-</head>
+  </head>
   <body class="bg-darker text-white antialiased">
     <div id="root"></div>
-  <script type="module" src="/index.tsx"></script>
-</body>
+    <script type="module" src="index.tsx"></script>
+  </body>
 </html>
