@@ -1,3 +1,4 @@
+
 import React, { useState } from 'react';
 
 const CustomCheckIcon = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
@@ -22,8 +23,12 @@ const CustomCheckIcon = ({ size = 24, className = "" }: { size?: number, classNa
 );
 
 export const About: React.FC = () => {
-  const [imageError, setImageError] = useState(false);
+  const [useFallback, setUseFallback] = useState(false);
   
+  // Primary source is the local file. We use ../ to go up from components/ to the root.
+  const localPortrait = "../portrait.jpg";
+  const fallbackUrl = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800";
+
   const credentials = [
     "Expert in Tax Compliance",
     "Certified Bookkeeping Professional",
@@ -41,23 +46,18 @@ export const About: React.FC = () => {
             
             <div className="relative z-10">
               <div className="aspect-[4/5] overflow-hidden rounded-sm shadow-3xl border border-white/5 bg-navy/80 flex items-center justify-center transform transition-all duration-1000 group-hover:scale-[1.01]">
-                {!imageError ? (
-                  <img 
-                    src="portrait.jpg" 
-                    alt="Lucia Maina Portrait" 
-                    className="w-full h-full object-cover transition-opacity duration-1000 opacity-0"
-                    onLoad={(e) => (e.currentTarget as HTMLImageElement).style.opacity = '1'}
-                    onError={() => setImageError(true)}
-                  />
-                ) : (
-                  <div className="flex flex-col items-center justify-center text-center p-8 space-y-4">
-                    <div className="serif text-gold italic text-4xl">Lucia Maina</div>
-                    <div className="w-16 h-1 bg-gold/20 rounded-full"></div>
-                    <p className="text-white/30 text-[10px] uppercase tracking-[0.4em] max-w-[200px] leading-relaxed">
-                      Lead Consultant & Compliance Specialist
-                    </p>
-                  </div>
-                )}
+                <img 
+                  src={useFallback ? fallbackUrl : localPortrait} 
+                  alt="Lucia Maina Portrait" 
+                  className="w-full h-full object-cover transition-opacity duration-1000 opacity-0"
+                  onLoad={(e) => (e.currentTarget as HTMLImageElement).style.opacity = '1'}
+                  onError={() => {
+                    if (!useFallback) {
+                      console.warn("Local portrait.jpg failed to load, switching to professional placeholder.");
+                      setUseFallback(true);
+                    }
+                  }}
+                />
               </div>
               
               <div className="absolute -bottom-6 left-6 right-6 bg-navy/95 backdrop-blur-xl p-6 rounded-sm border border-gold/30 shadow-3xl transform group-hover:-translate-y-1 transition-transform duration-700">
