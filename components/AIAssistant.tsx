@@ -7,7 +7,7 @@ export const AIAssistant: React.FC = () => {
   const [query, setQuery] = useState('');
   const [answer, setAnswer] = useState<string | null>(null);
   const [loading, setLoading] = useState(false);
-  const [configError, setConfigError] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -15,18 +15,21 @@ export const AIAssistant: React.FC = () => {
     
     setLoading(true);
     setAnswer(null);
-    setConfigError(false);
+    setError(null);
     
-    const result = await getTaxAdvice(query);
-    
-    if (result === "CONFIGURATION_REQUIRED") {
-      setConfigError(true);
-      setAnswer(null);
-    } else {
-      setAnswer(result || "Error processing request.");
+    try {
+      const result = await getTaxAdvice(query);
+      
+      if (result === "CONFIG_ERROR_MISSING_KEY") {
+        setError("The API Key hasn't been fully recognized by the production server yet. If you recently added it to Vercel, please trigger a 'Redeploy' from your Vercel Dashboard to ensure the environment variables are active.");
+      } else {
+        setAnswer(result);
+      }
+    } catch (err) {
+      setError("A connection error occurred. Please try again or contact support.");
+    } finally {
+      setLoading(false);
     }
-    
-    setLoading(false);
   };
 
   return (
@@ -50,7 +53,7 @@ export const AIAssistant: React.FC = () => {
                 <textarea
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Ex: What are the current VAT rates in Kenya?"
+                  placeholder="Ex: How do I register for eTIMS in Kenya?"
                   className="w-full p-8 pr-20 rounded-2xl border-2 border-white/5 bg-darker/50 text-white focus:border-gold/50 focus:ring-0 transition-all resize-none h-32 text-lg font-light placeholder:text-white/10 shadow-inner"
                 />
                 <button
@@ -63,13 +66,13 @@ export const AIAssistant: React.FC = () => {
               </div>
             </form>
 
-            {configError && (
+            {error && (
               <div className="mt-8 p-8 bg-red-900/20 rounded-3xl border border-red-500/30 animate-fade-in flex items-start gap-4">
                 <AlertCircle className="text-red-500 mt-1 flex-shrink-0" size={24} />
                 <div className="space-y-2">
                   <h4 className="text-white font-bold serif text-lg">AI Assistant Offline</h4>
                   <p className="text-white/70 text-sm leading-relaxed">
-                    The API Key hasn't been recognized yet. If you just added it to Vercel, please <strong>Redeploy</strong> your project from the Vercel dashboard to apply the changes.
+                    {error}
                   </p>
                 </div>
               </div>
