@@ -1,9 +1,9 @@
-
 import { GoogleGenAI } from "@google/genai";
 
 export const getTaxAdvice = async (userQuery: string) => {
   try {
-    // Adhering to strict guidelines: Initialize fresh instance inside function
+    // Guidelines: Always use process.env.API_KEY directly in the constructor.
+    // The SDK will throw an error if this is undefined, which we catch below.
     const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
     
     const response = await ai.models.generateContent({
@@ -19,15 +19,16 @@ export const getTaxAdvice = async (userQuery: string) => {
     });
 
     if (!response.text) {
-      throw new Error("Empty response");
+      throw new Error("Received an empty response from the AI model.");
     }
 
     return response.text;
   } catch (error: any) {
-    console.error("Gemini API Error:", error);
+    console.error("Gemini API Error Detail:", error);
     
-    // Check if it's an API Key specific error
-    if (error?.message?.includes('API_KEY') || !process.env.API_KEY) {
+    // Catch local SDK validation errors (e.g., missing key) or server-side 401/403 errors.
+    const errorMessage = error?.message || "";
+    if (errorMessage.includes("API Key") || errorMessage.includes("apiKey") || !process.env.API_KEY) {
       return "CONFIG_ERROR_MISSING_KEY";
     }
     
