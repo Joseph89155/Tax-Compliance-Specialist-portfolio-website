@@ -1,0 +1,6 @@
+
+/* This file is purposefully kept nearly empty as styles are handled via Tailwind CDN and internal styles in index.html */
+:root {
+  --navy: #0a2233;
+  --gold: #cda26d;
+}

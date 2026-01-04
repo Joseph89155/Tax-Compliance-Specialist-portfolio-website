@@ -1,6 +1,10 @@
 
 import React, { useState } from 'react';
 
+// Using new URL is the most robust way to reference assets in Vite/ESM 
+// It avoids TypeScript import errors and ensures the asset is bundled for production.
+const portraitUrl = new URL('../portrait.jpg', import.meta.url).href;
+
 const CustomCheckIcon = ({ size = 24, className = "" }: { size?: number, className?: string }) => (
   <svg 
     width={size} 
@@ -23,7 +27,11 @@ const CustomCheckIcon = ({ size = 24, className = "" }: { size?: number, classNa
 );
 
 export const About: React.FC = () => {
-  const [portraitSrc, setPortraitSrc] = useState("portrait.jpg");
+  // Professional high-resolution fallback from Unsplash in case of unexpected asset failure
+  const FALLBACK_IMAGE = "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&q=80&w=800";
+  
+  const [currentImage, setCurrentImage] = useState(portraitUrl);
+  const [hasError, setHasError] = useState(false);
   
   const credentials = [
     "Expert in Tax Compliance",
@@ -32,17 +40,11 @@ export const About: React.FC = () => {
     "Payroll Management Specialist"
   ];
 
-  const handleImageError = (e: React.SyntheticEvent<HTMLImageElement, Event>) => {
-    const target = e.currentTarget;
-    console.warn(`Lucia Advisory: Initial path ${portraitSrc} failed. Trying alternative...`);
-    
-    // Attempt common path resolutions for production environments
-    if (portraitSrc === "portrait.jpg") {
-      setPortraitSrc("./portrait.jpg");
-    } else if (portraitSrc === "./portrait.jpg") {
-      setPortraitSrc("/portrait.jpg");
-    } else {
-      console.error("Lucia Advisory: Portrait image could not be found at root paths. Please ensure portrait.jpg is in the project root.");
+  const handleImageError = () => {
+    if (!hasError) {
+      console.warn("Lucia Advisory: Asset resolution failed. Falling back to professional profile image.");
+      setCurrentImage(FALLBACK_IMAGE);
+      setHasError(true);
     }
   };
 
@@ -52,19 +54,21 @@ export const About: React.FC = () => {
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           
           <div className="relative group">
+            {/* Decorative Frame */}
             <div className="absolute -bottom-6 -right-6 w-full h-full border-2 border-gold/20 rounded-sm -z-0 group-hover:translate-x-2 group-hover:translate-y-2 transition-transform duration-1000"></div>
             
             <div className="relative z-10">
               <div className="aspect-[4/5] overflow-hidden rounded-sm shadow-3xl border border-white/5 bg-navy/80 flex items-center justify-center transform transition-all duration-1000 group-hover:scale-[1.01]">
                 <img 
-                  src={portraitSrc} 
-                  alt="Lucia Maina Portrait" 
+                  src={currentImage} 
+                  alt="Lucia Maina Professional Portrait" 
                   className="w-full h-full object-cover transition-opacity duration-1000 opacity-0"
                   onLoad={(e) => (e.currentTarget as HTMLImageElement).style.opacity = '1'}
                   onError={handleImageError}
                 />
               </div>
               
+              {/* Floating Expertise Summary Badge */}
               <div className="absolute -bottom-6 left-6 right-6 bg-navy/95 backdrop-blur-xl p-6 rounded-sm border border-gold/30 shadow-3xl transform group-hover:-translate-y-1 transition-transform duration-700">
                 <p className="text-gold serif italic text-xl mb-4 tracking-tight font-bold">Expertise</p>
                 <div className="grid grid-cols-1 sm:grid-cols-2 gap-y-3 gap-x-8">
